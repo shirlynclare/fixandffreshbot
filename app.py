@@ -210,9 +210,8 @@ def main():
     # Feedback
     st.sidebar.markdown("---")
     if st.sidebar.button("Give Feedback"):
-        st.sidebar.text_area("We'd love to hear your thoughts!", key="feedback")
-        if st.sidebar.button("Submit Feedback"):
-            st.sidebar.success("Thank you for your feedback!")
+        feedback_url = "https://feedback-5c6b48.zapier.app/submit-form"
+        st.sidebar.markdown(f"[Click here to access our feedback form]({feedback_url})")
 
 if __name__== "__main__":
     main()
