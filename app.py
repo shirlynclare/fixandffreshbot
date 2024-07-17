@@ -1,3 +1,5 @@
+#set up python environment
+#web ,API , data manipulation ,interaction
 import streamlit as st
 import google.generativeai as genai
 import pandas as pd
@@ -12,14 +14,19 @@ load_dotenv()
 # Configure the API key
 genai.configure(api_key=os.getenv('GEMINI_API_KEY'))
 
-# Set up the model
+# initialize the gemini model
 model = genai.GenerativeModel('gemini-pro')
 
+#chat feature
 def get_gemini_response(prompt):
     response = model.generate_content(prompt)
     return response.text
 
+
+#service feature
+#parameter(dt,ud)   
 def generate_service_chart(data_type, user_data=None):
+#nested functions
     if data_type == "Popular Services":
         if user_data:
             df = pd.DataFrame(user_data)
@@ -40,6 +47,7 @@ def generate_service_chart(data_type, user_data=None):
         fig = px.bar(df, x="Service", y="Cost", title="Average Service Costs")
     return fig
 
+#daily tip feature
 def get_daily_car_tip():
     tips = [
         "Check your tire pressure monthly for better fuel efficiency.",
@@ -49,41 +57,80 @@ def get_daily_car_tip():
         "Clean your headlights regularly for better visibility and safety."
     ]
     return random.choice(tips)
+#streamlit UI configuration starts
 
 def main():
-    st.set_page_config(page_title="Garagemate AI", page_icon=":car:", layout="wide")
-    
-    # Custom CSS for gray and black theme
-    st.markdown("""
+    # Toggle for light mode and dark mode
+    dark_mode = st.checkbox("Dark Mode", False)
+
+    # Custom CSS for light mode
+    light_mode_css = """
     <style>
     .big-font {
-        font-size:36px !important;
+        font-size: 36px !important;
         font-weight: bold;
-        color: #FF4500;
+        color: #0080FF; 
         text-align: center;
     }
     .stApp {
-        background-color: #2C2C2C;
-        color: #E0E0E0 !important;
+        background-color: #F0F0F0; 
+        color: #333333 !important; 
     }
     body {
-        color: #E0E0E0;
+        color: #333333; 
     }
     p, .stMarkdown, .stText {
-        color: #E0E0E0 !important;
+        color: #333333 !important; 
     }
     .stButton>button {
-        background-color: #FF4500;
+        background-color: #0080FF; 
         color: white;
     }
     .stSelectbox {
-        background-color: #3C3C3C;
+        background-color: #CCCCCC;
     }
     </style>
-    """, unsafe_allow_html=True)
+    """
 
+    # Custom CSS for dark mode
+    dark_mode_css = """
+    <style>
+    .big-font {
+        font-size: 36px !important;
+        font-weight: bold;
+        color: #333333; 
+        text-align: center;
+    }
+    .stApp {
+        background-color: #1E1E1E; 
+        color: #FFFFFF !important; 
+    }
+    body {
+        color: #FFFFFF; 
+    }
+    p, .stMarkdown, .stText {
+        color: #000000 !important; 
+    }
+    .stButton>button {
+        background-color: #1E90FF; 
+        color: black;
+    }
+    .stSelectbox {
+        background-color: #333333; 
+    }
+    </style>
+    """
+
+    # Apply light mode or dark mode CSS based on the checkbox
+    if dark_mode:
+        st.markdown(dark_mode_css, unsafe_allow_html=True)
+    else:
+        st.markdown(light_mode_css, unsafe_allow_html=True)
+
+    # Example content for the Streamlit app
     st.markdown('<p class="big-font">Garagemate AI</p>', unsafe_allow_html=True)
     st.write("Your comprehensive car maintenance companion powered by advanced AI")
+ 
 
     # Daily car tip
     st.info(f"🚗 Daily Car Tip: {get_daily_car_tip()}")
@@ -206,7 +253,7 @@ def main():
     # Footer
     st.markdown("---")
     st.markdown("*Disclaimer:* Garagemate AI is for informational purposes only. Always consult with a qualified mechanic for professional advice.")
-    
+    #zapier intergration
     # Feedback
     st.sidebar.markdown("---")
     if st.sidebar.button("Give Feedback"):
